@@ -1,0 +1,19 @@
+spring:
+  data:
+    mongodb:
+      authentication-database: test
+      username: supergramAdmin
+      password: admin
+      database: supergramdb
+      port: 27017
+      host: localhost
+
+
+server:
+  servlet:
+    context-path: /api/v1
+
+  port: 8081
+
+
+spring.output.ansi.enabled: always
