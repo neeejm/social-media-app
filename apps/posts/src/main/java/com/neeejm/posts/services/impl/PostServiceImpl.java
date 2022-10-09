@@ -81,16 +81,23 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostResponseDto incrementViewsByOne(String postId) {
-        postRepository.incermentViewsByOne(findPostOrElseThrow(postId));
+        Post post = findPostOrElseThrow(postId);
+        post.setViews(post.getViews() + 1);
 
         return postConverter.convertEntityToResponseDto(
-            postRepository.findById(postId).get()
+            postRepository.save(post)
         );
     }
     
     private void throwIfEmptyPost(PostRequestDto post) {
         if (post.getTitle() == null && post.getContent() == null) {
             throw new EmptyPostException(EMPTY_POST_MSG);
+        }
+    }
+
+    private void throwIfPostNotFound(String postId) {
+        if (!postRepository.existsById(postId)) {
+            throw new PostNotFoundException(POST_NOT_FOUND_MSG.formatted(postId));
         }
     }
 
