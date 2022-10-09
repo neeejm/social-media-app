@@ -9,6 +9,7 @@ import org.springframework.data.annotation.Version;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,18 +30,17 @@ public class Post {
 
     private String content;
 
-    private Integer views;
+    @Builder.Default
+    private Integer views = 0;
 
     @Version
     private Integer version;
 
     @CreatedDate
     @Builder.Default
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdAt = LocalDateTime.now();
 
     @LastModifiedDate
     @Builder.Default
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime modifiedAt = LocalDateTime.now();
 }

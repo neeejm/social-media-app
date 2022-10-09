@@ -15,12 +15,16 @@ repositories {
 }
 
 dependencies {
+	// spring
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+	// others
+	implementation 'org.modelmapper:modelmapper:3.0.0'
 }
 
 tasks.named('test') {
