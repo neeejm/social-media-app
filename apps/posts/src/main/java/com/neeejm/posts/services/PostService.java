@@ -16,4 +16,6 @@ public interface PostService {
     List<PostResponseDto> findAll();
 
     PostResponseDto findById(String postId);
+
+    PostResponseDto incrementViewsByOne(String postId);
 }

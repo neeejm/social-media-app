@@ -35,7 +35,7 @@ public class PostServiceImpl implements PostService {
         throwIfEmptyPost(post);
 
         return postConverter.convertEntityToResponseDto(
-            postRepository.save(
+            postRepository.insert(
                 postConverter.convertRequestDtoToEntity(post)
             )
         );
@@ -76,6 +76,15 @@ public class PostServiceImpl implements PostService {
     public PostResponseDto findById(String postId) {
         return postConverter.convertEntityToResponseDto(
             findPostOrElseThrow(postId)
+        );
+    }
+
+    @Override
+    public PostResponseDto incrementViewsByOne(String postId) {
+        postRepository.incermentViewsByOne(findPostOrElseThrow(postId));
+
+        return postConverter.convertEntityToResponseDto(
+            postRepository.findById(postId).get()
         );
     }
     
