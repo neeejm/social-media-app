@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchException;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.lenient;
 
 import java.util.Optional;
 
@@ -17,6 +18,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.neeejm.posts.exceptions.EmptyPostException;
+import com.neeejm.posts.exceptions.PostNotFoundException;
 import com.neeejm.posts.models.Post;
 import com.neeejm.posts.repositories.PostRepository;
 import com.neeejm.posts.services.PostService;
@@ -33,20 +35,19 @@ public class PostServiceImplTest {
     private ArgumentCaptor<Post> postArgCaptor;
 
     private PostService underTest;
+    private Post post;
 
     @BeforeEach
     void setup() {
         underTest = new PostServiceImpl(postRepository);
+        post  = Post.builder()
+                    .title("test")
+                    .content("this is a test content")    
+                    .build();
     }
 
     @Test
     void shouldAdd() {
-        // Given
-        Post post = Post.builder()
-                        .title("test")
-                        .content("this is a test content")    
-                        .build();
-
         // When
         underTest.add(post);
 
@@ -57,13 +58,13 @@ public class PostServiceImplTest {
     }
 
     @Test
-    void shouldThrowOnAdd() {
+    void shouldThrowOnAddWithEmptyPost() {
         // Given
-        Post post = new Post();
+        Post emtpyPost = new Post();
 
         // When
         Exception excpectedException = catchException(() ->
-            underTest.add(post)
+            underTest.add(emtpyPost)
         );
 
         // Then
@@ -74,10 +75,6 @@ public class PostServiceImplTest {
     @Test
     void shouldUpdate() {
         // Given
-        Post post = Post.builder()
-                        .title("test")
-                        .content("this is a test content")    
-                        .build();
         String postId = new ObjectId().toHexString();
 
         // ... Find a post with given id
@@ -101,7 +98,22 @@ public class PostServiceImplTest {
     }
 
     @Test
-    void shouldThrowOnUpdate() {
+    void shouldThrowPostNotFoundOnUpdate() {
+        // Given
+        String postId = new ObjectId().toHexString();
+
+        // When
+        Exception excpectedException = catchException(() ->
+            underTest.update(postId, post)
+        );
+
+        // Then
+        assertThat(excpectedException).isInstanceOf(PostNotFoundException.class)
+            .hasMessage(POST_NOT_FOUND_MSG.formatted(postId));
+    }
+
+    @Test
+    void shouldThrowOnUpdateWithEmptyPost() {
         // Given
         Post post = new Post();
         String postId = new ObjectId().toHexString();
