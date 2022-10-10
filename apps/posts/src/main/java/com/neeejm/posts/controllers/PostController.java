@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.neeejm.posts.dtos.PostRequestDto;
 import com.neeejm.posts.dtos.PostResponseDto;
+import com.neeejm.posts.dtos.converters.PostConverter;
 import com.neeejm.posts.services.PostService;
 
 @Controller
@@ -28,25 +29,37 @@ import com.neeejm.posts.services.PostService;
 public class PostController {
 
     private final PostService postService;
+    private final PostConverter postConverter;
 
     @Autowired
     public PostController(final PostService postService) {
         this.postService = postService;
+        this.postConverter = new PostConverter();
     }
 
     @GetMapping
     public ResponseEntity<List<PostResponseDto>> getAllPosts() {
-        return ResponseEntity.ok().body(postService.findAll());
+        return ResponseEntity.ok().body(
+            postConverter.convertEntityToResponseDto(postService.findAll())
+        );
     }
 
     @GetMapping("{postId}")
     public ResponseEntity<PostResponseDto> getPostById(@PathVariable String postId) {
-        return ResponseEntity.ok().body(postService.findById(postId));
+        return ResponseEntity.ok().body(
+            postConverter.convertEntityToResponseDto(postService.findById(postId))
+        );
     }
 
     @PostMapping
     public ResponseEntity<PostResponseDto> addPost(@RequestBody PostRequestDto post) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(postService.add(post));
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+            postConverter.convertEntityToResponseDto(
+                postService.add(
+                    postConverter.convertRequestDtoToEntity(post)
+                )
+            )
+        );
     }
 
     @PutMapping("{postId}")
@@ -54,7 +67,14 @@ public class PostController {
         @PathVariable String postId,
         @RequestBody PostRequestDto post
     ) {
-        return ResponseEntity.ok().body(postService.update(postId, post));
+        return ResponseEntity.ok().body(
+            postConverter.convertEntityToResponseDto(
+                postService.update(
+                    postId,
+                    postConverter.convertRequestDtoToEntity(post)
+                )
+            )
+        );
     }
 
     @DeleteMapping("{postId}")
@@ -65,6 +85,10 @@ public class PostController {
 
     @PatchMapping("{postId}")
     public ResponseEntity<PostResponseDto> incrementViewsByOne(@PathVariable String postId) {
-        return ResponseEntity.ok().body(postService.incrementViewsByOne(postId));
+        return ResponseEntity.ok().body(
+            postConverter.convertEntityToResponseDto(
+                postService.incrementViewsByOne(postId)
+            )
+        );
     }
 }

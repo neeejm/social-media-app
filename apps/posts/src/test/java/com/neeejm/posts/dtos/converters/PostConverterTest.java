@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -23,14 +22,17 @@ public class PostConverterTest {
 
     @Test
     void shouldConvertEntityToResponseDto() {
+        // Given
         Post postToConvert = Post.builder()
                                 .title("title 1")
                                 .content("content 1")
                                 .views(5)
                                 .build();
         
+        // When
         PostResponseDto expected = underTest.convertEntityToResponseDto(postToConvert);
 
+        // Then
         assertThat(expected).hasFieldOrPropertyWithValue("title", postToConvert.getTitle())
                             .hasFieldOrPropertyWithValue("content", postToConvert.getContent())
                             .hasFieldOrPropertyWithValue("views", postToConvert.getViews())
@@ -39,6 +41,7 @@ public class PostConverterTest {
 
     @Test
     void shouldConvertEntityListToResponseDtoList() {
+        // Given
         List<Post> postsToConvert = List.of(
             Post.builder()
                 .title("title 1")
@@ -51,8 +54,10 @@ public class PostConverterTest {
                 .build()
         );
         
+        // When
         List<PostResponseDto> expected = underTest.convertEntityToResponseDto(postsToConvert);
 
+        // Then
         assertThat(expected).hasSize(2).first()
                             .hasFieldOrPropertyWithValue(
                                 "title", postsToConvert.get(0).getTitle())
@@ -66,13 +71,16 @@ public class PostConverterTest {
 
     @Test
     void shouldConvertRequestDtoToEntity() {
+        //Given
         PostRequestDto postDtoToConvert = PostRequestDto.builder()
                                                         .title("title 1")
                                                         .content("content 1")
                                                         .build();
         
+        // When
         Post expected = underTest.convertRequestDtoToEntity(postDtoToConvert);
 
+        // Then
         assertThat(expected).hasFieldOrPropertyWithValue("title", postDtoToConvert.getTitle())
                             .hasFieldOrPropertyWithValue("content", postDtoToConvert.getContent());
     }

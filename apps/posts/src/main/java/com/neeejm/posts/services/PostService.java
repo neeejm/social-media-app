@@ -2,20 +2,19 @@ package com.neeejm.posts.services;
 
 import java.util.List;
 
-import com.neeejm.posts.dtos.PostRequestDto;
-import com.neeejm.posts.dtos.PostResponseDto;
+import com.neeejm.posts.models.Post;
 
 public interface PostService {
 
-    PostResponseDto add(PostRequestDto post);
+    Post add(Post post);
 
-    PostResponseDto update(String postId, PostRequestDto post);
+    Post update(String postId, Post post);
 
     void delete(String postId);
 
-    List<PostResponseDto> findAll();
+    List<Post> findAll();
 
-    PostResponseDto findById(String postId);
+    Post findById(String postId);
 
-    PostResponseDto incrementViewsByOne(String postId);
+    Post incrementViewsByOne(String postId);
 }

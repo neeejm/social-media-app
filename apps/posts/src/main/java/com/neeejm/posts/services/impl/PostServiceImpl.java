@@ -6,9 +6,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.neeejm.posts.dtos.PostRequestDto;
-import com.neeejm.posts.dtos.PostResponseDto;
-import com.neeejm.posts.dtos.converters.PostConverter;
 import com.neeejm.posts.exceptions.EmptyPostException;
 import com.neeejm.posts.exceptions.PostNotFoundException;
 import com.neeejm.posts.models.Post;
@@ -22,27 +19,21 @@ public class PostServiceImpl implements PostService {
     private static final String EMPTY_POST_MSG = "Post must have at least a title or content";
 
     private final PostRepository postRepository;
-    private final PostConverter postConverter;
 
     @Autowired
     public PostServiceImpl(final PostRepository postRepository) {
         this.postRepository = postRepository;
-        this.postConverter = new PostConverter();
     }
 
     @Override
-    public PostResponseDto add(PostRequestDto post) {
+    public Post add(Post post) {
         throwIfEmptyPost(post);
 
-        return postConverter.convertEntityToResponseDto(
-            postRepository.insert(
-                postConverter.convertRequestDtoToEntity(post)
-            )
-        );
+        return postRepository.insert(post);
     }
 
     @Override
-    public PostResponseDto update(String postId, PostRequestDto post) {
+    public Post update(String postId, Post post) {
         throwIfEmptyPost(post);
         Post postToUpdate = findPostOrElseThrow(postId);
 
@@ -54,9 +45,8 @@ public class PostServiceImpl implements PostService {
         );
         postToUpdate.setModifiedAt(LocalDateTime.now());
 
-        return postConverter.convertEntityToResponseDto(
-            postRepository.save(postToUpdate)
-        );
+        return postRepository.save(postToUpdate);
+        
     }
 
 
@@ -66,30 +56,24 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<PostResponseDto> findAll() {
-        return postConverter.convertEntityToResponseDto(
-            postRepository.findAll()
-        );
+    public List<Post> findAll() {
+        return postRepository.findAll();
     }
 
     @Override
-    public PostResponseDto findById(String postId) {
-        return postConverter.convertEntityToResponseDto(
-            findPostOrElseThrow(postId)
-        );
+    public Post findById(String postId) {
+        return findPostOrElseThrow(postId);
     }
 
     @Override
-    public PostResponseDto incrementViewsByOne(String postId) {
+    public Post incrementViewsByOne(String postId) {
         Post post = findPostOrElseThrow(postId);
         post.setViews(post.getViews() + 1);
 
-        return postConverter.convertEntityToResponseDto(
-            postRepository.save(post)
-        );
+        return postRepository.save(post);
     }
     
-    private void throwIfEmptyPost(PostRequestDto post) {
+    private void throwIfEmptyPost(Post post) {
         if (post.getTitle() == null && post.getContent() == null) {
             throw new EmptyPostException(EMPTY_POST_MSG);
         }
