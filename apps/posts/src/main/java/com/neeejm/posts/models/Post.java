@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 
 @Document
 @Data
-@Builder
+@Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
 public class Post {

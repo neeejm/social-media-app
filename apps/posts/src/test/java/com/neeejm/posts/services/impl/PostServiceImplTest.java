@@ -2,8 +2,12 @@ package com.neeejm.posts.services.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchException;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
+import java.util.Optional;
+
+import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -49,12 +53,7 @@ public class PostServiceImplTest {
         // Then
         then(postRepository).should().insert(postArgCaptor.capture());
         Post capturedPost = postArgCaptor.getValue();
-        assertThat(capturedPost).isNotNull()
-            .hasFieldOrPropertyWithValue("title", post.getTitle())
-            .hasFieldOrPropertyWithValue("content", post.getContent())
-            .hasFieldOrPropertyWithValue("views", post.getViews())
-            .hasFieldOrPropertyWithValue("createdAt", post.getCreatedAt())
-            .hasFieldOrPropertyWithValue("modifiedAt", post.getModifiedAt());
+        assertThat(capturedPost).isNotNull().isEqualTo(post);
     }
 
     @Test
@@ -65,6 +64,51 @@ public class PostServiceImplTest {
         // When
         Exception excpectedException = catchException(() ->
             underTest.add(post)
+        );
+
+        // Then
+        assertThat(excpectedException).isInstanceOf(EmptyPostException.class)
+            .hasMessage(EMPTY_POST_MSG);
+    }
+
+    @Test
+    void shouldUpdate() {
+        // Given
+        Post post = Post.builder()
+                        .title("test")
+                        .content("this is a test content")    
+                        .build();
+        String postId = new ObjectId().toHexString();
+
+        // ... Find a post with given id
+        given(postRepository.findById(postId)).willReturn(
+            Optional.of(post.toBuilder().build())
+        );
+
+        // When
+        underTest.update(postId, post);
+
+
+        // Then
+        then(postRepository).should().save(postArgCaptor.capture());
+        Post capturedPost = postArgCaptor.getValue();
+        assertThat(capturedPost).isNotNull();
+        assertThat(capturedPost.getTitle()).isEqualTo(post.getTitle());
+        assertThat(capturedPost.getContent()).isEqualTo(post.getContent());
+        assertThat(capturedPost.getCreatedAt()).isEqualTo(post.getCreatedAt());
+        assertThat(capturedPost.getModifiedAt()).isAfter(post.getModifiedAt());
+        
+    }
+
+    @Test
+    void shouldThrowOnUpdate() {
+        // Given
+        Post post = new Post();
+        String postId = new ObjectId().toHexString();
+
+        // When
+        Exception excpectedException = catchException(() ->
+            underTest.update(postId, post)
         );
 
         // Then
