@@ -11,7 +11,7 @@ import com.neeejm.posts.dtos.PostRequestDto;
 import com.neeejm.posts.dtos.PostResponseDto;
 import com.neeejm.posts.models.Post;
 
-public class PostConverterTest {
+public class PostConverterTests {
 
     private PostConverter underTest;
 

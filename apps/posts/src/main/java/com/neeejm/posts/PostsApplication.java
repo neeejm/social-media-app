@@ -15,14 +15,14 @@ public class PostsApplication {
 		SpringApplication.run(PostsApplication.class, args);
 	}
 
-	@Bean
-	CommandLineRunner seed(PostRepository postRepository) {
-		return args -> {
-			Post post = Post.builder()
-							.content("helllo")
-							.build();
-			postRepository.save(post);
-		};
-	}
+	// @Bean
+	// CommandLineRunner seed(PostRepository postRepository) {
+	// 	return args -> {
+	// 		Post post = Post.builder()
+	// 						.content("helllo")
+	// 						.build();
+	// 		postRepository.save(post);
+	// 	};
+	// }
 
 }
