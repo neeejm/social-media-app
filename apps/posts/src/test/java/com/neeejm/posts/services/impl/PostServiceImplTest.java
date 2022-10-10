@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.catchException;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.verify;
 
 import java.util.Optional;
 
@@ -128,28 +129,23 @@ public class PostServiceImplTest {
             .hasMessage(EMPTY_POST_MSG);
     }
 
-    @Test
-    void testDelete() {
-
-    }
-
-    @Test
-    void testFindAll() {
-
-    }
-
-    @Test
-    void testFindById() {
-
-    }
 
     @Test
     void testIncrementViewsByOne() {
+        // Given
+        String postId = new ObjectId().toHexString();
 
-    }
+        // ... Find a post with given id
+        given(postRepository.findById(postId)).willReturn(
+            Optional.of(post.toBuilder().build())
+        );
 
-    @Test
-    void testUpdate() {
+        // When
+        underTest.incrementViewsByOne(postId);
 
+        // Then
+        then(postRepository).should().save(postArgCaptor.capture());
+        Post capturedPost = postArgCaptor.getValue();
+        assertThat(capturedPost.getViews()).isEqualTo(post.getViews() + 1);
     }
 }
