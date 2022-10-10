@@ -1,6 +1,7 @@
 package com.neeejm.posts.services.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchException;
 import static org.mockito.BDDMockito.then;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -11,6 +12,7 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.neeejm.posts.exceptions.EmptyPostException;
 import com.neeejm.posts.models.Post;
 import com.neeejm.posts.repositories.PostRepository;
 import com.neeejm.posts.services.PostService;
@@ -53,7 +55,21 @@ public class PostServiceImplTest {
             .hasFieldOrPropertyWithValue("views", post.getViews())
             .hasFieldOrPropertyWithValue("createdAt", post.getCreatedAt())
             .hasFieldOrPropertyWithValue("modifiedAt", post.getModifiedAt());
+    }
 
+    @Test
+    void shouldThrowOnAdd() {
+        // Given
+        Post post = new Post();
+
+        // When
+        Exception excpectedException = catchException(() ->
+            underTest.add(post)
+        );
+
+        // Then
+        assertThat(excpectedException).isInstanceOf(EmptyPostException.class)
+            .hasMessage(EMPTY_POST_MSG);
     }
 
     @Test
