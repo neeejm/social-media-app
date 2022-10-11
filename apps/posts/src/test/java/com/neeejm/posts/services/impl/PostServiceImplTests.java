@@ -23,7 +23,7 @@ import com.neeejm.posts.repositories.PostRepository;
 import com.neeejm.posts.services.PostService;
 
 @ExtendWith(MockitoExtension.class)
-public class PostServiceImplTests {
+class PostServiceImplTests {
 
     private static final String POST_NOT_FOUND_MSG = "Post with id '%s' not found";
     private static final String EMPTY_POST_MSG = "Post must have at least a title or content";

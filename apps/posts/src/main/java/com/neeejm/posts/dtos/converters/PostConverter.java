@@ -28,7 +28,8 @@ public class PostConverter {
     }
 
     public List<PostResponseDto> convertEntityToResponseDto(List<Post> posts) {
-        return posts.stream().map(post -> mapper.map(post, PostResponseDto.class))
-                            .collect(Collectors.toList());
+        return posts.stream().map(
+            post -> mapper.map(post, PostResponseDto.class)
+        ).toList();
     }
 }

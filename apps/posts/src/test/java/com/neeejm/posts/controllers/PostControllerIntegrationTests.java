@@ -15,7 +15,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
-import com.mongodb.internal.operation.DropCollectionOperation;
 import com.neeejm.posts.dtos.PostRequestDto;
 import com.neeejm.posts.dtos.PostResponseDto;
 import com.neeejm.posts.dtos.converters.PostConverter;
@@ -28,7 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class PostControllerIntegrationTests {
+class PostControllerIntegrationTests {
 
     private static final String POST_NOT_FOUND_MSG = "Post with id '%s' not found";
     private static final String EMPTY_POST_MSG = "Post must have at least a title or content";

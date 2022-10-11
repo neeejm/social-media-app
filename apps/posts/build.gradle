@@ -4,7 +4,9 @@ plugins {
 	id 'java'
 	id 'maven-publish'
 	id "io.freefair.lombok" version "6.5.1"
+	id "co.uzzu.dotenv.gradle" version "2.0.0"
 	id 'jacoco'
+	id "org.sonarqube" version "3.4.0.2513"
 }
 
 group = 'com.neeejm'
@@ -62,4 +64,16 @@ task integrationTest(type: Test) {
 
 jacocoTestReport {
 	dependsOn test
+}
+
+sonarqube {
+  properties {
+    property "sonar.projectKey", "neeejm_social-media-app"
+    property "sonar.organization", "neeejm"
+    property "sonar.login", env.SONAR_TOKEN.value
+    property "sonar.host.url", "https://sonarcloud.io"
+    // property "sonar.sources", "src/main"
+    // property "sonar.test", "src/test"
+    // property "sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/test/jacocoTestReport.xml"
+  }
 }
