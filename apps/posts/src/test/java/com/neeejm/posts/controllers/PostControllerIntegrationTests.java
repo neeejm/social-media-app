@@ -1,19 +1,21 @@
 package com.neeejm.posts.controllers;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import org.bson.types.ObjectId;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
+import com.mongodb.internal.operation.DropCollectionOperation;
 import com.neeejm.posts.dtos.PostRequestDto;
 import com.neeejm.posts.dtos.PostResponseDto;
 import com.neeejm.posts.dtos.converters.PostConverter;
@@ -35,6 +37,13 @@ public class PostControllerIntegrationTests {
     private WebTestClient wClient;
     @Autowired
     private PostService postService;
+    @Autowired
+    private MongoTemplate mongoTemplate;
+
+    @AfterEach
+    void teardown() {
+        mongoTemplate.dropCollection("post");
+    }
 
     @Test
     void shouldAddPost() {

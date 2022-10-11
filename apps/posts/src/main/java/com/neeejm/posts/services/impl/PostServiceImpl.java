@@ -79,12 +79,6 @@ public class PostServiceImpl implements PostService {
         }
     }
 
-    private void throwIfPostNotFound(String postId) {
-        if (!postRepository.existsById(postId)) {
-            throw new PostNotFoundException(POST_NOT_FOUND_MSG.formatted(postId));
-        }
-    }
-
     private Post findPostOrElseThrow(String postId) {
         return postRepository.findById(postId).orElseThrow(() ->
             new PostNotFoundException(POST_NOT_FOUND_MSG.formatted(postId))

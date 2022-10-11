@@ -4,6 +4,7 @@ plugins {
 	id 'java'
 	id 'maven-publish'
 	id "io.freefair.lombok" version "6.5.1"
+	id 'jacoco'
 }
 
 group = 'com.neeejm'
@@ -41,4 +42,24 @@ publishing {
 			artifact bootJar
 		}
 	}
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+	finalizedBy jacocoTestReport
+}
+
+task unitTest(type: Test) {
+	exclude '**/*IntegrationTests*'
+	useJUnitPlatform()
+	finalizedBy jacocoTestReport
+}
+
+task integrationTest(type: Test) {
+	include '**/*IntegrationTests*'
+	useJUnitPlatform()
+}
+
+jacocoTestReport {
+	dependsOn test
 }
