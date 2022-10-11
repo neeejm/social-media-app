@@ -1,13 +1,12 @@
 spring:
   data:
     mongodb:
-      authentication-database: test
-      username: supergramAdmin
-      password: admin
-      database: supergramdb
-      port: 27017
-      host: localhost
-
+      # authentication-database: test
+      # username: supergramAdmin
+      # password: admin
+      database: supergram
+      # port: 27017
+      # host: localhost
 
 server:
   servlet:

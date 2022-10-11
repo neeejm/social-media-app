@@ -18,7 +18,9 @@ dependencies {
 	// spring
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+ 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 
+	testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
