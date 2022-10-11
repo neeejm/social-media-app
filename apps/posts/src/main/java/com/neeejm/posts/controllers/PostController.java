@@ -83,7 +83,7 @@ public class PostController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @PatchMapping("{postId}")
+    @PatchMapping("{postId}/views")
     public ResponseEntity<PostResponseDto> incrementViewsByOne(@PathVariable String postId) {
         return ResponseEntity.ok().body(
             postConverter.convertEntityToResponseDto(

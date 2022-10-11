@@ -1,12 +1,12 @@
 package com.neeejm.posts.controllers;
 
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.fail;
 
-import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
+import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,6 +27,9 @@ import lombok.extern.slf4j.Slf4j;
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class PostControllerIntegrationTests {
+
+    private static final String POST_NOT_FOUND_MSG = "Post with id '%s' not found";
+    private static final String EMPTY_POST_MSG = "Post must have at least a title or content";
 
     @Autowired
     private WebTestClient wClient;
@@ -72,15 +75,8 @@ public class PostControllerIntegrationTests {
                 .expectStatus().isBadRequest()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON)
                 .expectBody(ApiError.class).value(v ->
-                    assertThat(v.getErrors()).containsOnly(
-                        "Post must have at least a title or content"
-                    )
+                    assertThat(v.getErrors()).containsOnly(EMPTY_POST_MSG)
                 );
-    }
-
-    @Test
-    void testDeletePost() {
-        fail("should delete post not yet implemented");
     }
 
     @Test
@@ -110,17 +106,93 @@ public class PostControllerIntegrationTests {
     }
 
     @Test
-    void testGetPostById() {
-        fail("should get post by its id not yet implemented");
+    void shouldNotFindPost() {
+        // Given
+        String postId = new ObjectId().toHexString();
+            
+        // When
+        // Then
+        wClient.get()
+                .uri("/posts/" + postId)
+                .exchange()
+                .expectStatus().isNotFound()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                .expectBody(ApiError.class).value(v -> 
+                    assertThat(v.getErrors()).containsOnly(
+                        POST_NOT_FOUND_MSG.formatted(postId)
+                    )
+                );
     }
 
     @Test
-    void testIncrementViewsByOne() {
-        fail("should increment post views by one not yet implemented");
+    void shouldGetPostById() {
+        // ... init converter
+        PostConverter converter = new PostConverter();
+        // Given
+        Post post = Post.builder()
+                        .title("test")
+                        .content("this is a test content")
+                        .build();
+        post = postService.add(post);
+        // ... Only keep time down to seconds cause json response does not contain nano seconds
+        post.setCreatedAt(post.getCreatedAt().truncatedTo(ChronoUnit.SECONDS));
+        post.setModifiedAt(post.getModifiedAt().truncatedTo(ChronoUnit.SECONDS));
+            
+        // When
+        // Then
+        wClient.get()
+                .uri("/posts/" + post.getId())
+                .exchange()
+                .expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                .expectBody(PostResponseDto.class).isEqualTo(
+                    converter.convertEntityToResponseDto(post)
+                );
+    }
+
+    @Test
+    void shouldIncrementViewsByOne() {
+        // Given
+        Post post = Post.builder()
+                        .title("test")
+                        .content("this is a test content")
+                        .build();
+        post = postService.add(post);
+        int views = post.getViews();
+            
+        // When
+        // Then
+        wClient.patch()
+                .uri("/posts/" + post.getId() + "/views")
+                .exchange()
+                .expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                .expectBody(PostResponseDto.class).value(v ->
+                    assertThat(v.getViews()).isEqualTo(views + 1)
+                );
     }
 
     @Test
     void testUpdatePost() {
-        fail("should update post not yet implemented");
+        // Given
+        Post post = Post.builder()
+                        .title("test")
+                        .content("this is a test content")
+                        .build();
+        post = postService.add(post);
+        post.setTitle("test updated");
+        
+        // When
+        // Then
+        wClient.put()
+                .uri("/posts/" + post.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(post)
+                .exchange()
+                .expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                .expectBody(PostResponseDto.class).value(v -> {
+                    assertThat(v.getTitle()).isEqualTo("test updated");
+                });
     }
 }
