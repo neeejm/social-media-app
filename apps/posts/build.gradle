@@ -63,7 +63,9 @@ task integrationTest(type: Test) {
 }
 
 jacocoTestReport {
-	dependsOn test
+	getExecutionData().setFrom(fileTree(buildDir).include("/jacoco/unitTest.exec")) 
+
+	dependsOn unitTest
 
 	reports {
 		xml.required = true
