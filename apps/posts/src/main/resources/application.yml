@@ -11,18 +11,18 @@ spring:
 
   data:
     mongodb:
-      # authentication-database: test
-      # username: supergramAdmin
-      # password: admin
+      authentication-database: ${DB_AUTH_DB}
+      username: ${DB_USERNAME}
+      password: ${DB_PASSWORD}
       database: ${DB_NAME}
-      # port: 27017
-      # host: localhost
+      port: 27017
+      host: ${DB_HOST}
 
 server:
   servlet:
     context-path: /api/v1
 
-  port: ${SERVER_PORT}
+  port: ${PORT}
 
 
 logging:
