@@ -1,0 +1,10 @@
+.gradle/**
+bin/**
+build/**
+.env*
+.gitignore
+HELP.md
+project.json
+Dockerfile
+docker-compose.yml
+.dockerignore
