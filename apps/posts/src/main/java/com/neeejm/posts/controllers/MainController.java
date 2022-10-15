@@ -18,7 +18,7 @@ public class MainController {
     @GetMapping
     public ResponseEntity<Object> index() {
         return ResponseEntity.ok().body(
-            Map.of("msg", "hello") 
+            Map.of("msg", "hello test") 
         );
     }
 }
