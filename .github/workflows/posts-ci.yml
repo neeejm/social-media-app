@@ -51,8 +51,8 @@ jobs:
 
       - name: Code Analysis
         run: ./gradlew sonarqube
-        # env:
-        #   SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         #   SONAR_HOST_URL: https://sonarcloud.io
 
   test-env:
