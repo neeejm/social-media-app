@@ -7,7 +7,7 @@ services:
       context: ./
       dockerfile: Dockerfile
     ports:
-      - "9001:8080"
+      - ${PORT}:${PORT}
     env_file:
       - .env.docker
 
