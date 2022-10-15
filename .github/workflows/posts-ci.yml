@@ -34,7 +34,6 @@ jobs:
         uses: gradle/gradle-build-action@v2
 
       - name: Make gradlew executable
-        # working-directory: apps/posts/
         run: chmod +x ./gradlew
     
       - name: Build source
@@ -42,7 +41,6 @@ jobs:
         run: ./gradlew clean build -x test
 
       - name: Unit Test
-        # working-directory: apps/posts/
         run: ./gradlew clean unitTest
 
       - name: Cache build dir
@@ -52,11 +50,10 @@ jobs:
           key: ${{ hashFiles('settings.gradle') }}-build
 
       - name: Code Analysis
-        # working-directory: apps/posts/
         run: ./gradlew sonarqube
-        env:
-          # SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: https://sonarcloud.io
+        # env:
+        #   SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        #   SONAR_HOST_URL: https://sonarcloud.io
 
   test-env:
     name: Test Environment
