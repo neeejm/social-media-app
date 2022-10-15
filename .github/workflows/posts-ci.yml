@@ -44,7 +44,7 @@ jobs:
           path: ./build
           key: ${{ hashFiles('settings.gradle') }}-build
 
-      - name: Code Analysis
+      - name: Static code Analysis
         run: ./gradlew sonarqube
         env:
           # SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
