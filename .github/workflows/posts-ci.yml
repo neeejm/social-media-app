@@ -28,22 +28,16 @@ jobs:
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
 
-      - name: Echo ls
-        run: ls -l
-      
-      - name: Change to posts dir
-        run: cd ./apps/posts/
-
-      - name: Echo pwd
-        run: pwd
-
       - name: Make gradlew executable
+        working-directory: apps/posts/
         run: chmod +x ./gradlew
     
       - name: Build source
+        working-directory: apps/posts/
         run: ./gradlew clean build -x test
 
       - name: Unit Test
+        working-directory: apps/posts/
         run: ./gradlew clean unitTest
 
       - name: Cache build dir
@@ -53,6 +47,7 @@ jobs:
           key: ${{ hashFiles('settings.gradle') }}-build
 
       - name: Static code Analysis
+        working-directory: apps/posts/
         run: ./gradlew sonarqube
         env:
           # SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
