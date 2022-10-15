@@ -11,18 +11,13 @@ spring:
 
   data:
     mongodb:
-      authentication-database: ${DB_AUTH_DB}
-      username: ${DB_USERNAME}
-      password: ${DB_PASSWORD}
-      database: ${DB_NAME}
-      port: 27017
-      host: ${DB_HOST}
+      uri: ${DB_DRIVER}://${DB_USERNAME}:${DB_PASSWORD}@${DB_HOST}/${DB_NAME}?authSource=${DB_AUTH_DB}&retryWrites=true&w=majority"
 
 server:
   servlet:
     context-path: /api/v1
 
-  port: ${PORT}
+  port: ${PORT:8080}
 
 
 logging:
