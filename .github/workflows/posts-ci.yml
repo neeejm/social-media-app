@@ -27,6 +27,9 @@ jobs:
 
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
+
+      - name: Echo ls
+        run: ls -l
       
       - name: Change to posts dir
         run: cd ./apps/posts/
