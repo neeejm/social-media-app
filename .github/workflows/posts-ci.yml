@@ -27,7 +27,7 @@ jobs:
         uses: gradle/gradle-build-action@v2
       
       - name: Change to posts dir
-        run: cd ./"apps/posts/"
+        run: cd ./apps/posts/
 
       - name: Make gradlew executable
         run: chmod +x gradlew
