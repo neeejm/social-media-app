@@ -31,8 +31,11 @@ jobs:
       - name: Change to posts dir
         run: cd ./apps/posts/
 
+      - name: Echo pwd
+        run: pwd
+
       - name: Make gradlew executable
-        run: chmod +x gradlew
+        run: chmod +x ./gradlew
     
       - name: Build source
         run: ./gradlew clean build -x test
