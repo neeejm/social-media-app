@@ -87,7 +87,7 @@ jobs:
         run: ./gradlew clean integrationTest
   
   docker:
-    name: Build and push docker container
+    name: Build and push docker image
     runs-on: ubuntu-latest
     defaults:
       run:
