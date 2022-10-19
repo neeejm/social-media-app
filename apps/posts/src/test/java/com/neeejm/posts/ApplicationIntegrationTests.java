@@ -11,9 +11,8 @@ import org.springframework.test.context.ActiveProfiles;
 @SpringBootTest
 class ApplicationIntegrationTests {
 
-	@Test
-	void contextLoads(ApplicationContext context) {
-		assertThat(context).isNotNull();
-	}
-
+  @Test
+  void contextLoads(ApplicationContext context) {
+    assertThat(context).isNotNull();
+  }
 }

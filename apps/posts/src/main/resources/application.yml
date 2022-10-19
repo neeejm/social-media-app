@@ -19,11 +19,9 @@ server:
 
   port: ${PORT:8080}
 
-
 logging:
   level:
     '[org.springframework.web.filter.CommonsRequestLoggingFilter]': 'DEBUG'
     '[com.neeejm.posts]': 'DEBUG'
-
 
 spring.output.ansi.enabled: always
