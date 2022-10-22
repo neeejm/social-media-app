@@ -18,24 +18,24 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @AllArgsConstructor
 public class Post {
 
-  @Id
-  private String id;
+    @Id
+    private String id;
 
-  private String title;
+    private String title;
 
-  private String content;
+    private String content;
 
-  @Builder.Default
-  private Integer views = 0;
+    @Builder.Default
+    private Integer views = 0;
 
-  @Version
-  private Integer version;
+    @Version
+    private Integer version;
 
-  @CreatedDate
-  @Builder.Default
-  private LocalDateTime createdAt = LocalDateTime.now();
+    @CreatedDate
+    @Builder.Default
+    private LocalDateTime createdAt = LocalDateTime.now();
 
-  @LastModifiedDate
-  @Builder.Default
-  private LocalDateTime modifiedAt = LocalDateTime.now();
+    @LastModifiedDate
+    @Builder.Default
+    private LocalDateTime modifiedAt = LocalDateTime.now();
 }

@@ -10,21 +10,23 @@ import org.springframework.stereotype.Component;
 @Component
 public class PostConverter {
 
-  private final ModelMapper mapper;
+    private final ModelMapper mapper;
 
-  public PostConverter() {
-    this.mapper = new ModelMapper();
-  }
+    public PostConverter() {
+        this.mapper = new ModelMapper();
+    }
 
-  public Post convertRequestDtoToEntity(PostRequestDto postRequestDto) {
-    return mapper.map(postRequestDto, Post.class);
-  }
+    public Post convertRequestDtoToEntity(PostRequestDto postRequestDto) {
+        return mapper.map(postRequestDto, Post.class);
+    }
 
-  public PostResponseDto convertEntityToResponseDto(Post post) {
-    return mapper.map(post, PostResponseDto.class);
-  }
+    public PostResponseDto convertEntityToResponseDto(Post post) {
+        return mapper.map(post, PostResponseDto.class);
+    }
 
-  public List<PostResponseDto> convertEntityToResponseDto(List<Post> posts) {
-    return posts.stream().map(post -> mapper.map(post, PostResponseDto.class)).toList();
-  }
+    public List<PostResponseDto> convertEntityToResponseDto(List<Post> posts) {
+        return posts.stream()
+                .map(post -> mapper.map(post, PostResponseDto.class))
+                .toList();
+    }
 }

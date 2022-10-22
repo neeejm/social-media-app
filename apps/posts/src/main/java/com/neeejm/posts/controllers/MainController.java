@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE)
 public class MainController {
 
-  @GetMapping
-  public ResponseEntity<Object> index() {
-    return ResponseEntity.ok().body(Map.of("msg", "hello test"));
-  }
+    @GetMapping
+    public ResponseEntity<Object> index() {
+        return ResponseEntity.ok().body(Map.of("msg", "hello test"));
+    }
 }

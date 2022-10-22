@@ -35,10 +35,12 @@ jobs:
 
       - name: Make gradlew executable
         run: chmod +x ./gradlew
+
+      - name: Format code
+        run: ./gradlew spotlessApply
     
       - name: Build source
-        working-directory: apps/posts/
-        run: ./gradlew clean build -x test
+        run: ./gradlew clean build -x test -x spotlessJavaCheck
 
       - name: Unit Test
         run: ./gradlew clean unitTest

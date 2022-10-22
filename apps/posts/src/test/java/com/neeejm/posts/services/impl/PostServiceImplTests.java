@@ -23,110 +23,111 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class PostServiceImplTests {
 
-  private static final String POST_NOT_FOUND_MSG = "Post with id '%s' not found";
-  private static final String EMPTY_POST_MSG = "Post must have at least a title or content";
+    private static final String POST_NOT_FOUND_MSG = "Post with id '%s' not found";
+    private static final String EMPTY_POST_MSG = "Post must have at least a title or content";
 
-  @Mock private PostRepository postRepository;
-  @Captor private ArgumentCaptor<Post> postArgCaptor;
+    @Mock
+    private PostRepository postRepository;
 
-  private PostService underTest;
-  private Post post;
+    @Captor
+    private ArgumentCaptor<Post> postArgCaptor;
 
-  @BeforeEach
-  void setup() {
-    underTest = new PostServiceImpl(postRepository);
-    post = Post.builder().title("test").content("this is a test content").build();
-  }
+    private PostService underTest;
+    private Post post;
 
-  @Test
-  void shouldAdd() {
-    // When
-    underTest.add(post);
+    @BeforeEach
+    void setup() {
+        underTest = new PostServiceImpl(postRepository);
+        post = Post.builder().title("test").content("this is a test content").build();
+    }
 
-    // Then
-    then(postRepository).should().insert(postArgCaptor.capture());
-    Post capturedPost = postArgCaptor.getValue();
-    assertThat(capturedPost).isNotNull().isEqualTo(post);
-  }
+    @Test
+    void shouldAdd() {
+        // When
+        underTest.add(post);
 
-  @Test
-  void shouldThrowOnAddWithEmptyPost() {
-    // Given
-    Post emtpyPost = new Post();
+        // Then
+        then(postRepository).should().insert(postArgCaptor.capture());
+        Post capturedPost = postArgCaptor.getValue();
+        assertThat(capturedPost).isNotNull().isEqualTo(post);
+    }
 
-    // When
-    Exception excpectedException = catchException(() -> underTest.add(emtpyPost));
+    @Test
+    void shouldThrowOnAddWithEmptyPost() {
+        // Given
+        Post emtpyPost = new Post();
 
-    // Then
-    assertThat(excpectedException)
-        .isInstanceOf(EmptyPostException.class)
-        .hasMessage(EMPTY_POST_MSG);
-  }
+        // When
+        Exception excpectedException = catchException(() -> underTest.add(emtpyPost));
 
-  @Test
-  void shouldUpdate() {
-    // Given
-    String postId = new ObjectId().toHexString();
+        // Then
+        assertThat(excpectedException).isInstanceOf(EmptyPostException.class).hasMessage(EMPTY_POST_MSG);
+    }
 
-    // ... Find a post with given id
-    given(postRepository.findById(postId)).willReturn(Optional.of(post.toBuilder().build()));
+    @Test
+    void shouldUpdate() {
+        // Given
+        String postId = new ObjectId().toHexString();
 
-    // When
-    underTest.update(postId, post);
+        // ... Find a post with given id
+        given(postRepository.findById(postId))
+                .willReturn(Optional.of(post.toBuilder().build()));
 
-    // Then
-    then(postRepository).should().save(postArgCaptor.capture());
-    Post capturedPost = postArgCaptor.getValue();
-    assertThat(capturedPost).isNotNull();
-    assertThat(capturedPost.getTitle()).isEqualTo(post.getTitle());
-    assertThat(capturedPost.getContent()).isEqualTo(post.getContent());
-    assertThat(capturedPost.getCreatedAt()).isEqualTo(post.getCreatedAt());
-    assertThat(capturedPost.getModifiedAt()).isAfter(post.getModifiedAt());
-  }
+        // When
+        underTest.update(postId, post);
 
-  @Test
-  void shouldThrowPostNotFoundOnUpdate() {
-    // Given
-    String postId = new ObjectId().toHexString();
+        // Then
+        then(postRepository).should().save(postArgCaptor.capture());
+        Post capturedPost = postArgCaptor.getValue();
+        assertThat(capturedPost).isNotNull();
+        assertThat(capturedPost.getTitle()).isEqualTo(post.getTitle());
+        assertThat(capturedPost.getContent()).isEqualTo(post.getContent());
+        assertThat(capturedPost.getCreatedAt()).isEqualTo(post.getCreatedAt());
+        assertThat(capturedPost.getModifiedAt()).isAfter(post.getModifiedAt());
+    }
 
-    // When
-    Exception excpectedException = catchException(() -> underTest.update(postId, post));
+    @Test
+    void shouldThrowPostNotFoundOnUpdate() {
+        // Given
+        String postId = new ObjectId().toHexString();
 
-    // Then
-    assertThat(excpectedException)
-        .isInstanceOf(PostNotFoundException.class)
-        .hasMessage(POST_NOT_FOUND_MSG.formatted(postId));
-  }
+        // When
+        Exception excpectedException = catchException(() -> underTest.update(postId, post));
 
-  @Test
-  void shouldThrowOnUpdateWithEmptyPost() {
-    // Given
-    Post post = new Post();
-    String postId = new ObjectId().toHexString();
+        // Then
+        assertThat(excpectedException)
+                .isInstanceOf(PostNotFoundException.class)
+                .hasMessage(POST_NOT_FOUND_MSG.formatted(postId));
+    }
 
-    // When
-    Exception excpectedException = catchException(() -> underTest.update(postId, post));
+    @Test
+    void shouldThrowOnUpdateWithEmptyPost() {
+        // Given
+        Post post = new Post();
+        String postId = new ObjectId().toHexString();
 
-    // Then
-    assertThat(excpectedException)
-        .isInstanceOf(EmptyPostException.class)
-        .hasMessage(EMPTY_POST_MSG);
-  }
+        // When
+        Exception excpectedException = catchException(() -> underTest.update(postId, post));
 
-  @Test
-  void testIncrementViewsByOne() {
-    // Given
-    String postId = new ObjectId().toHexString();
+        // Then
+        assertThat(excpectedException).isInstanceOf(EmptyPostException.class).hasMessage(EMPTY_POST_MSG);
+    }
 
-    // ... Find a post with given id
-    given(postRepository.findById(postId)).willReturn(Optional.of(post.toBuilder().build()));
+    @Test
+    void testIncrementViewsByOne() {
+        // Given
+        String postId = new ObjectId().toHexString();
 
-    // When
-    underTest.incrementViewsByOne(postId);
+        // ... Find a post with given id
+        given(postRepository.findById(postId))
+                .willReturn(Optional.of(post.toBuilder().build()));
 
-    // Then
-    then(postRepository).should().save(postArgCaptor.capture());
-    Post capturedPost = postArgCaptor.getValue();
-    assertThat(capturedPost.getViews()).isEqualTo(post.getViews() + 1);
-  }
+        // When
+        underTest.incrementViewsByOne(postId);
+
+        // Then
+        then(postRepository).should().save(postArgCaptor.capture());
+        Post capturedPost = postArgCaptor.getValue();
+        assertThat(capturedPost.getViews()).isEqualTo(post.getViews() + 1);
+    }
 }

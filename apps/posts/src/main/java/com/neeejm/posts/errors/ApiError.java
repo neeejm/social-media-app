@@ -16,30 +16,30 @@ import org.springframework.http.HttpStatus;
 @JsonInclude(Include.NON_NULL)
 public class ApiError {
 
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")
-  private Date timestamp;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")
+    private Date timestamp;
 
-  private int code;
+    private int code;
 
-  private String status;
+    private String status;
 
-  private Set<String> errors;
+    private Set<String> errors;
 
-  private String stackTrace;
+    private String stackTrace;
 
-  public ApiError(HttpStatus httpStatus, Set<String> errors, String stackTrace) {
-    this.timestamp = new Date();
-    this.code = httpStatus.value();
-    this.status = httpStatus.name();
-    this.errors = errors;
-    this.stackTrace = stackTrace;
-  }
+    public ApiError(HttpStatus httpStatus, Set<String> errors, String stackTrace) {
+        this.timestamp = new Date();
+        this.code = httpStatus.value();
+        this.status = httpStatus.name();
+        this.errors = errors;
+        this.stackTrace = stackTrace;
+    }
 
-  public ApiError(HttpStatus httpStatus, Set<String> errors) {
-    this.timestamp = new Date();
-    this.code = httpStatus.value();
-    this.status = httpStatus.name();
-    this.errors = errors;
-    this.stackTrace = null;
-  }
+    public ApiError(HttpStatus httpStatus, Set<String> errors) {
+        this.timestamp = new Date();
+        this.code = httpStatus.value();
+        this.status = httpStatus.name();
+        this.errors = errors;
+        this.stackTrace = null;
+    }
 }

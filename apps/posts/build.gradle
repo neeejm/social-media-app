@@ -33,12 +33,10 @@ dependencies {
     implementation 'org.modelmapper:modelmapper:3.0.0'
 }
 
-tasks.named('test') {
-    useJUnitPlatform()
-}
 springBoot {
     buildInfo()
 }
+
 publishing {
     publications {
         mavenJava(MavenPublication) {
@@ -49,7 +47,6 @@ publishing {
 
 tasks.named('test') {
     useJUnitPlatform()
-    finalizedBy jacocoTestReport
 }
 
 task unitTest(type: Test) {
@@ -87,6 +84,14 @@ sonarqube {
 
 spotless {
     java {
-        googleJavaFormat()
+        target fileTree('.') {
+            include '**/*.java'
+            exclude '**/build/**', '**/build-*/**'
+        }
+        palantirJavaFormat()
+        indentWithSpaces(2)
+        removeUnusedImports()
+        trimTrailingWhitespace()
+        endWithNewline()
     }
 }
