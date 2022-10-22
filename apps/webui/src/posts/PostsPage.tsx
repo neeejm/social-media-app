@@ -12,11 +12,6 @@ export interface AddPostsResponse {
 const Posts = () => {
   const [posts, setPosts] = useState<PostResponse[]>([]);
 
-  const refreshPosts = (data: PostResponse[]) => {
-    console.log('all posts updated: ', data);
-    setPosts(data);
-  };
-
   const getPosts = async () => {
     try {
       const { data, status } = await axios.get<PostResponse[]>(
@@ -45,7 +40,6 @@ const Posts = () => {
       <PostForm
         posts={posts}
         setPosts={setPosts}
-        refreshPosts={getPosts}
       />
       <PostList posts={posts} />
     </div>

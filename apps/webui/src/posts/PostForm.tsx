@@ -1,4 +1,4 @@
-import React, { Dispatch, useRef } from 'react';
+import React, { SetStateAction, useRef } from 'react';
 import axios from 'axios';
 import { PostRequest } from './interfaces/PostRequest.interface';
 import { PostResponse } from './interfaces/PostResponse.interface';
@@ -10,8 +10,7 @@ interface AddPostsResponse {
 
 interface Props {
   posts: PostResponse[];
-  setPosts: (value: React.SetStateAction<PostResponse[]>) => void;
-  refreshPosts: () => Promise<void>;
+  setPosts: (value: SetStateAction<PostResponse[]>) => void;
 }
 
 const addRequestConfig = {
@@ -20,7 +19,7 @@ const addRequestConfig = {
   }
 };
 
-const PostForm = ({ posts, setPosts, refreshPosts }: Props) => {
+const PostForm = ({ posts, setPosts }: Props) => {
   const titleRef = useRef<HTMLInputElement>(null);
   const contentRef = useRef<HTMLInputElement>(null);
 
@@ -37,14 +36,12 @@ const PostForm = ({ posts, setPosts, refreshPosts }: Props) => {
 
       console.log('response status is: ', status);
 
-      // posts.push(data);
-      // setPosts(posts);
-      refreshPosts();
-    } catch (error) {
+      setPosts([...posts, data]);
+    } catch (error: any) {
       if (axios.isAxiosError(error)) {
         console.log('error: ', error.message);
       } else {
-        console.log('unexpected error: ', error);
+        console.log('unexpected error: ', error.message);
       }
     }
   };
