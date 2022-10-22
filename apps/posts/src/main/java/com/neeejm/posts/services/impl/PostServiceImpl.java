@@ -67,7 +67,8 @@ public class PostServiceImpl implements PostService {
   }
 
   private void throwIfEmptyPost(Post post) {
-    if (post.getTitle() == null && post.getContent() == null) {
+    if ((post.getTitle() == null || post.getTitle().equals(""))
+        && (post.getContent() == null || post.getContent().equals(""))) {
       throw new EmptyPostException(EMPTY_POST_MSG);
     }
   }

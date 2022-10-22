@@ -11,7 +11,7 @@ spring:
 
   data:
     mongodb:
-      uri: ${DB_DRIVER}://${DB_USERNAME}:${DB_PASSWORD}@${DB_HOST}/${DB_NAME}?authSource=${DB_AUTH_DB}&retryWrites=true&w=majority"
+      uri: ${DB_DRIVER}://${DB_USERNAME}:${DB_PASSWORD}@${DB_HOST}/${DB_NAME}?authSource=${DB_AUTH_DB}&retryWrites=true"
 
 server:
   servlet:
