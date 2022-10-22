@@ -1,29 +1,20 @@
-import React, { createContext, Dispatch, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PostList from './PostList';
 import { PostResponse } from './interfaces/PostResponse.interface';
 import axios from 'axios';
 import PostForm from './PostForm';
-import { PostContext } from './interfaces/PostContext.interface';
 
 export interface AddPostsResponse {
   data: PostResponse[];
   status: string;
 }
 
-const defaultCtxValue: PostContext = {
-  posts: [],
-  setPosts: () => 'default',
-  test: 'default test'
-};
-
-export const PostCtx = createContext<PostContext>(defaultCtxValue);
-
 const Posts = () => {
   const [posts, setPosts] = useState<PostResponse[]>([]);
-  const postsContext: PostContext = {
-    posts: posts,
-    setPosts: setPosts,
-    test: 'hello'
+
+  const refreshPosts = (data: PostResponse[]) => {
+    console.log('all posts updated: ', data);
+    setPosts(data);
   };
 
   const getPosts = async () => {
@@ -49,13 +40,15 @@ const Posts = () => {
   }, []);
 
   return (
-    <PostCtx.Provider value={postsContext}>
-      <div>
-        <h1>Posts Page</h1>
-        <PostForm />
-        <PostList posts={posts} />
-      </div>
-    </PostCtx.Provider>
+    <div>
+      <h1>Posts Page</h1>
+      <PostForm
+        posts={posts}
+        setPosts={setPosts}
+        refreshPosts={getPosts}
+      />
+      <PostList posts={posts} />
+    </div>
   );
 };
 
