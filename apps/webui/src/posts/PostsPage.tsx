@@ -1,9 +1,9 @@
-import React, { createContext, useEffect, useState } from 'react';
-import PostList from './PostList';
-import { PostResponse } from './interfaces/PostResponse.interface';
 import axios from 'axios';
-import PostForm from './PostForm';
+import { createContext, useEffect, useState } from 'react';
 import { PostContext } from './interfaces/PostContext.interface';
+import { PostResponse } from './interfaces/PostResponse.interface';
+import PostForm from './PostForm';
+import PostList from './PostList';
 
 export interface AddPostsResponse {
   data: PostResponse[];

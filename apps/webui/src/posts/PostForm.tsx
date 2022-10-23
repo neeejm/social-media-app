@@ -1,19 +1,9 @@
-import React, { SetStateAction, useContext, useRef } from 'react';
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
+import { useContext, useRef } from 'react';
+import { PostContext } from './interfaces/PostContext.interface';
 import { PostRequest } from './interfaces/PostRequest.interface';
 import { PostResponse } from './interfaces/PostResponse.interface';
 import { PostCtx } from './PostsPage';
-import { PostContext } from './interfaces/PostContext.interface';
-
-interface AddPostsResponse {
-  data: PostResponse;
-  status: string;
-}
-
-interface Props {
-  posts: PostResponse[];
-  setPosts: (value: SetStateAction<PostResponse[]>) => void;
-}
 
 const addRequestConfig = {
   headers: {
@@ -28,7 +18,10 @@ const PostForm = () => {
 
   const addPost = async () => {
     try {
-      const { data, status } = await axios.post<PostRequest, AddPostsResponse>(
+      const { data, status } = await axios.post<
+        PostRequest,
+        AxiosResponse<PostResponse>
+      >(
         'http://localhost:8081/api/v1/posts',
         {
           title: titleRef.current?.value,

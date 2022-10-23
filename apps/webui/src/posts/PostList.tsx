@@ -1,4 +1,3 @@
-import React from 'react';
 import { PostResponse } from './interfaces/PostResponse.interface';
 import PostCard from './PostCard';
 
