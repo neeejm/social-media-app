@@ -1,6 +1,5 @@
-import axios from 'axios';
 import { useContext, useRef, useState } from 'react';
-import { AxiosResponse } from './interfaces/AxiosResponse.interface';
+import { useHttpClient } from '../hooks/useHttpClient';
 import { PostContext } from './interfaces/PostContext.interface';
 import { PostRequest } from './interfaces/PostRequest.interface';
 import { PostResponse } from './interfaces/PostResponse.interface';
@@ -17,47 +16,44 @@ const PostCard = ({ post }: Props) => {
   const contentRef = useRef<HTMLInputElement>(null);
   const [titleEditable, setTitleEditable] = useState(false);
   const [contentEditable, setContentEditable] = useState(false);
+  const { doRequest, error, isLoading } = useHttpClient<
+    PostResponse,
+    PostRequest
+  >();
+  let action: 'edit' | 'delete';
 
   const editPost = async () => {
-    try {
-      const { data, status } = await axios.put<
-        PostRequest,
-        AxiosResponse<PostResponse>
-      >(`http://localhost:8081/api/v1/posts/${post.id}`, {
+    action = 'edit';
+    console.log('inside action', action);
+
+    doRequest({
+      url: `http://localhost:8081/api/v1/posts/${post.id}`,
+      method: 'PUT',
+      body: {
         title: titleEditable ? titleRef.current?.value : post.title,
         content: contentEditable ? contentRef.current?.value : post.content
-      });
-
-      console.log('response status is: ', status);
-
-      setPosts(posts.map((p) => (p.id === data.id ? data : p)));
-      setTitleEditable(false);
-      setContentEditable(false);
-    } catch (error: any) {
-      if (axios.isAxiosError(error)) {
-        console.log('error: ', error.message);
-      } else {
-        console.log('unexpected error: ', error.message);
+      },
+      onSuccess: (data, status) => {
+        setPosts(posts.map((p) => (p.id === data.id ? data : p)));
+        console.log('response status is:', status);
       }
-    }
+    });
+
+    setTitleEditable(false);
+    setContentEditable(false);
   };
 
   const deletePost = async () => {
-    try {
-      const { status } = await axios.delete(
-        `http://localhost:8081/api/v1/posts/${post.id}`
-      );
+    action = 'delete';
 
-      console.log('response status is: ', status);
-
-      setPosts(posts.filter((p) => p.id !== post.id));
-    } catch (error: any) {
-      if (axios.isAxiosError(error)) {
-        console.log('error: ', error.message);
-      } else {
-        console.log('unexpected error: ', error.message);
+    doRequest({
+      url: `http://localhost:8081/api/v1/posts/${post.id}`,
+      method: 'DELETE',
+      onSuccess: (_, status) => {
+        setPosts(posts.filter((p) => p.id !== post.id));
+        console.log('response status is:', status);
       }
-    }
+    });
   };
 
   const cancelEdit = () => {
@@ -67,6 +63,8 @@ const PostCard = ({ post }: Props) => {
 
   return (
     <>
+      {isLoading && <p>Editing post...</p>}
+      {!isLoading && error && <p style={{ color: 'red' }}>{error}</p>}
       <TextView
         title="Title"
         value={post.title}

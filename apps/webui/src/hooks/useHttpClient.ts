@@ -1,51 +1,42 @@
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
-const useAxiosFetch = <T>(
-  url: string,
-  method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
-): { data: T | never[]; error: string | null; isLoading: boolean } => {
-  const [data, setData] = useState<T | never[]>([]);
+interface RequestConfig<T, R> {
+  url: string;
+  method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
+  body?: R;
+  onSuccess: (data: T, status: number) => void;
+}
+
+export const useHttpClient = <T, R = any>(): {
+  doRequest: (config: RequestConfig<T, R>) => Promise<void>;
+  error: string | null;
+  isLoading: boolean;
+} => {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    let isMounted = true;
-    const controller = new AbortController();
+  const doRequest = async ({
+    url,
+    method,
+    body,
+    onSuccess
+  }: RequestConfig<T, R>) => {
+    setIsLoading(true);
+    try {
+      const response = await axios({
+        method: method,
+        url: url,
+        data: body ? body : null
+      });
 
-    const fetchData = async (url: string) => {
-      setIsLoading(true);
-      try {
-        const response = await axios({
-          method: method,
-          url: url,
-          signal: controller.signal
-        });
-        if (isMounted) {
-          setData(response.data);
-          setError(null);
-        }
-      } catch (err: any) {
-        if (isMounted) {
-          setError(err.message);
-          setData([]);
-        }
-      } finally {
-        isMounted && setIsLoading(false);
-      }
-    };
+      onSuccess(response.data, response.status);
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-    fetchData(url);
-
-    const cleanUp = () => {
-      isMounted = false;
-      controller.abort();
-    };
-
-    return cleanUp;
-  }, [url]);
-
-  return { data, error, isLoading };
+  return { doRequest, error, isLoading };
 };
-
-export default useAxiosFetch;

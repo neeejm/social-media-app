@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState } from 'react';
-import useHttpClient from '../hooks/useHttpClient';
+import { useHttpClient } from '../hooks/useHttpClient';
 import { PostContext } from './interfaces/PostContext.interface';
 import { PostResponse } from './interfaces/PostResponse.interface';
 import PostForm from './PostForm';
@@ -19,10 +19,7 @@ export const PostCtx = createContext(defaultValue);
 
 const Posts = () => {
   const [posts, setPosts] = useState<PostResponse[]>([]);
-  const { data, error, isLoading } = useHttpClient<PostResponse[]>(
-    'http://localhost:8081/api/v1/posts',
-    'GET'
-  );
+  const { doRequest, error, isLoading } = useHttpClient<PostResponse[]>();
 
   const postContext: PostContext = {
     posts: posts,
@@ -30,9 +27,15 @@ const Posts = () => {
   };
 
   useEffect(() => {
-    setPosts(data);
-    console.log('eh', data);
-  }, [data]);
+    doRequest({
+      url: 'http://localhost:8081/api/v1/posts',
+      method: 'GET',
+      onSuccess: (data, status) => {
+        setPosts(data);
+        console.log('response status is:', status);
+      }
+    });
+  }, []);
 
   return (
     <PostCtx.Provider value={postContext}>
