@@ -30,8 +30,14 @@ const PostCard = ({ post }: Props) => {
       url: `http://localhost:8081/api/v1/posts/${post.id}`,
       method: 'PUT',
       body: {
-        title: titleEditable ? titleRef.current?.value : post.title,
-        content: contentEditable ? contentRef.current?.value : post.content
+        title:
+          titleEditable && titleRef.current
+            ? titleRef.current.value
+            : post.title,
+        content:
+          contentEditable && contentRef.current
+            ? contentRef.current.value
+            : post.content
       },
       onSuccess: (data, status) => {
         setPosts(posts.map((p) => (p.id === data.id ? data : p)));
