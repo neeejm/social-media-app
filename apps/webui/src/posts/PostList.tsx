@@ -24,7 +24,7 @@ const PostList = ({ posts, error, isLoading }: Props) => {
           ))
         ) : (
           <Image
-            src="/apps/webui/src/assets/imgs/travolta.png"
+            src="/assets/imgs/travolta.png"
             alt="Confused Travolta"
           />
         ))}
