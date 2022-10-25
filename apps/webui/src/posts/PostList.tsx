@@ -1,4 +1,5 @@
 import { Image } from '@chakra-ui/react';
+import travoltaImg from '../assets/imgs/travolta.png';
 import { PostResponse } from './interfaces/PostResponse.interface';
 import PostCard from './PostCard';
 
@@ -24,7 +25,7 @@ const PostList = ({ posts, error, isLoading }: Props) => {
           ))
         ) : (
           <Image
-            src="/assets/imgs/travolta.png"
+            src={travoltaImg}
             alt="Confused Travolta"
           />
         ))}
