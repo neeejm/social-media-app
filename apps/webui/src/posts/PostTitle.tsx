@@ -1,28 +1,35 @@
+import { Badge, Input, Text } from '@chakra-ui/react';
 import { Dispatch, forwardRef, SetStateAction } from 'react';
 
 interface Props {
-  title: string;
   value: string;
   editable: boolean;
   setEditable: Dispatch<SetStateAction<boolean>>;
 }
 
-const TextView = forwardRef<HTMLInputElement, Props>(
-  ({ title, value, editable, setEditable }, ref) => {
+export const PostTitle = forwardRef<HTMLInputElement, Props>(
+  ({ value, editable, setEditable }, ref) => {
     return (
       <>
-        <h4>{title}: </h4>
         {!editable ? (
-          <p
+          <Text
+            fontWeight="bold"
             onDoubleClick={() => {
               setEditable(true);
             }}
           >
             {value}
-          </p>
+            <Badge
+              ml="1"
+              colorScheme="green"
+            >
+              New
+            </Badge>
+          </Text>
         ) : (
-          <input
+          <Input
             type="text"
+            size="sm"
             defaultValue={value}
             ref={ref}
           />
@@ -31,5 +38,3 @@ const TextView = forwardRef<HTMLInputElement, Props>(
     );
   }
 );
-
-export default TextView;

@@ -1,4 +1,4 @@
-import { Container } from '@chakra-ui/react';
+import { Container, Divider, Stack } from '@chakra-ui/react';
 import { createContext, useEffect, useState } from 'react';
 import { useHttpClient } from '../hooks/useHttpClient';
 import { PostContext } from './interfaces/PostContext.interface';
@@ -43,13 +43,17 @@ const Posts = () => {
       <Container
         maxW="container.sm"
         marginTop="10"
+        marginBottom="10"
       >
-        <PostForm />
-        <PostList
-          posts={posts}
-          error={error}
-          isLoading={isLoading}
-        />
+        <Stack spacing={4}>
+          <PostForm />
+          <Divider />
+          <PostList
+            posts={posts}
+            error={error}
+            isLoading={isLoading}
+          />
+        </Stack>
       </Container>
     </PostCtx.Provider>
   );

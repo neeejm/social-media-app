@@ -1,10 +1,23 @@
+import { CloseIcon, DeleteIcon, EditIcon } from '@chakra-ui/icons';
+import {
+  Box,
+  Divider,
+  Flex,
+  HStack,
+  IconButton,
+  Spacer,
+  Stack
+} from '@chakra-ui/react';
 import { useContext, useRef, useState } from 'react';
 import { useHttpClient } from '../hooks/useHttpClient';
 import { PostContext } from './interfaces/PostContext.interface';
 import { PostRequest } from './interfaces/PostRequest.interface';
 import { PostResponse } from './interfaces/PostResponse.interface';
+import { PostContent } from './PostContent';
+import { PostDate } from './PostDate';
 import { PostCtx } from './PostsPage';
-import TextView from './TextView';
+import { PostTitle } from './PostTitle';
+import { PostViews } from './PostViews';
 
 type Props = {
   post: PostResponse;
@@ -13,7 +26,7 @@ type Props = {
 const PostCard = ({ post }: Props) => {
   const { posts, setPosts } = useContext<PostContext>(PostCtx);
   const titleRef = useRef<HTMLInputElement>(null);
-  const contentRef = useRef<HTMLInputElement>(null);
+  const contentRef = useRef<HTMLTextAreaElement>(null);
   const [titleEditable, setTitleEditable] = useState(false);
   const [contentEditable, setContentEditable] = useState(false);
   const { doRequest, error, isLoading } = useHttpClient<
@@ -69,38 +82,73 @@ const PostCard = ({ post }: Props) => {
 
   return (
     <>
-      {isLoading && <p>Editing post...</p>}
-      {!isLoading && error && <p style={{ color: 'red' }}>{error}</p>}
-      <TextView
-        title="Title"
-        value={post.title}
-        ref={titleRef}
-        editable={titleEditable}
-        setEditable={setTitleEditable}
-      />
-      <TextView
-        title="Content"
-        value={post.content}
-        ref={contentRef}
-        editable={contentEditable}
-        setEditable={setContentEditable}
-      />
-      <h4>Info: </h4>
-      <p>
-        [{post.views}] ({post.createdAt.toString()} /{' '}
-        {post.modifiedAt.toString()})
-      </p>
-
-      {titleEditable || contentEditable ? (
-        <>
-          <button onClick={editPost}>edit</button>
-          <button onClick={cancelEdit}>cancel</button>
-        </>
-      ) : (
-        ''
-      )}
-      <button onClick={deletePost}>delete</button>
-      <hr />
+      <Box
+        maxW="100%"
+        padding="6"
+        borderWidth="1px"
+        borderRadius="lg"
+      >
+        <Stack spacing={3}>
+          {isLoading && <p>Editing post...</p>}
+          {!isLoading && error && <p style={{ color: 'red' }}>{error}</p>}
+          <PostTitle
+            value={post.title}
+            ref={titleRef}
+            editable={titleEditable}
+            setEditable={setTitleEditable}
+          />
+          <HStack>
+            <PostViews views={post.views} />
+            <PostDate
+              text="created"
+              date={post.createdAt}
+            />
+            <PostDate
+              text="modified"
+              date={post.modifiedAt}
+            />
+          </HStack>
+          <Divider />
+          <PostContent
+            value={post.content}
+            ref={contentRef}
+            editable={contentEditable}
+            setEditable={setContentEditable}
+          />
+          <Flex>
+            <Spacer />
+            <HStack>
+              {titleEditable || contentEditable ? (
+                <>
+                  <IconButton
+                    size="sm"
+                    bg="lightgreen"
+                    aria-label="Edit the current post"
+                    onClick={editPost}
+                    icon={<EditIcon />}
+                  />
+                  <IconButton
+                    size="sm"
+                    bg="yellow"
+                    aria-label="Cancel editing the current post"
+                    onClick={cancelEdit}
+                    icon={<CloseIcon />}
+                  />
+                </>
+              ) : (
+                ''
+              )}
+              <IconButton
+                size="sm"
+                aria-label="Delete the current post"
+                onClick={deletePost}
+                bg="red"
+                icon={<DeleteIcon />}
+              />
+            </HStack>
+          </Flex>
+        </Stack>
+      </Box>
     </>
   );
 };
