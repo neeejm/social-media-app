@@ -1,3 +1,4 @@
+import { Image } from '@chakra-ui/react';
 import { PostResponse } from './interfaces/PostResponse.interface';
 import PostCard from './PostCard';
 
@@ -22,7 +23,10 @@ const PostList = ({ posts, error, isLoading }: Props) => {
             />
           ))
         ) : (
-          <p>No posts to display.</p>
+          <Image
+            src="/apps/webui/src/assets/imgs/travolta.png"
+            alt="Confused Travolta"
+          />
         ))}
     </div>
   );
