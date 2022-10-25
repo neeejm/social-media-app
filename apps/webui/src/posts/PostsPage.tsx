@@ -1,5 +1,6 @@
-import { Container, Divider, Stack } from '@chakra-ui/react';
+import { Container, Divider, Grid, GridItem, Stack } from '@chakra-ui/react';
 import { createContext, useEffect, useState } from 'react';
+import { VerticalNavbar } from '../common/components/VerticalNavbar';
 import { useHttpClient } from '../hooks/useHttpClient';
 import { PostContext } from './interfaces/PostContext.interface';
 import { PostResponse } from './interfaces/PostResponse.interface';
@@ -41,19 +42,28 @@ const Posts = () => {
   return (
     <PostCtx.Provider value={postContext}>
       <Container
-        maxW="container.sm"
-        marginTop="10"
+        maxW="container.xl"
         marginBottom="10"
       >
-        <Stack spacing={4}>
-          <PostForm />
-          <Divider />
-          <PostList
-            posts={posts}
-            error={error}
-            isLoading={isLoading}
-          />
-        </Stack>
+        <Grid templateColumns="repeat(8, 1fr)">
+          <GridItem
+            colSpan={2}
+            marginTop={10}
+          >
+            <VerticalNavbar />
+          </GridItem>
+          <GridItem colSpan={4}>
+            <Stack spacing={4}>
+              <PostForm />
+              <Divider />
+              <PostList
+                posts={posts}
+                error={error}
+                isLoading={isLoading}
+              />
+            </Stack>
+          </GridItem>
+        </Grid>
       </Container>
     </PostCtx.Provider>
   );
