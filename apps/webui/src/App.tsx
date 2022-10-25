@@ -1,11 +1,20 @@
-import React from 'react';
+import { Button, Container, Text } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 
 export default function App() {
   return (
-    <div className="App">
-      <h1>Welcome to Supergram 😜</h1>
-      <Link to={'/posts'}>Posts</Link>
-    </div>
+    <>
+      <Container padding="5">
+        <Text fontSize="6xl">Welcome to Supergram 😜</Text>
+        <Link to={'/posts'}>
+          <Button
+            colorScheme="teal"
+            margin="10"
+          >
+            Posts
+          </Button>
+        </Link>
+      </Container>
+    </>
   );
 }

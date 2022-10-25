@@ -1,3 +1,4 @@
+import { Box, Button, Input, Stack, Textarea } from '@chakra-ui/react';
 import axios, { AxiosResponse } from 'axios';
 import { useContext, useRef } from 'react';
 import { PostContext } from './interfaces/PostContext.interface';
@@ -13,7 +14,7 @@ const addRequestConfig = {
 
 const PostForm = () => {
   const titleRef = useRef<HTMLInputElement>(null);
-  const contentRef = useRef<HTMLInputElement>(null);
+  const contentRef = useRef<HTMLTextAreaElement>(null);
   const { posts, setPosts } = useContext<PostContext>(PostCtx);
 
   const addPost = async () => {
@@ -50,25 +51,36 @@ const PostForm = () => {
   };
 
   return (
-    <>
-      <label>Add Post </label>
-      <label htmlFor="post-title">Title: </label>
-      <input
-        type="text"
-        name="post-title"
-        id="post-title"
-        ref={titleRef}
-      />
-      <label htmlFor="post-title">Content: </label>
-      <input
-        type="text"
-        name="post-content"
-        id="post-content"
-        ref={contentRef}
-      />
-      <button onClick={addPost}>Post</button>
-      <hr />
-    </>
+    <Box
+      maxW="100%"
+      padding="6"
+      borderWidth="1px"
+      borderRadius="lg"
+    >
+      <Stack spacing={3}>
+        <Input
+          placeholder="Title"
+          size="sm"
+          type="text"
+          name="post-title"
+          id="post-title"
+          ref={titleRef}
+        />
+        <Textarea
+          placeholder="Write your post content here..."
+          size="sm"
+          name="post-content"
+          id="post-content"
+          ref={contentRef}
+        />
+        <Button
+          colorScheme="teal"
+          onClick={addPost}
+        >
+          Posts
+        </Button>
+      </Stack>
+    </Box>
   );
 };
 
